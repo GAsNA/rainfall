@@ -1,0 +1,6 @@
+With the command ``ls -l``, we can find an executable ``level0``. We can try to execute it with ``./level0`` or ``level0 a``, but we got a segmentation fault or a message ``No !`` printed.
+
+First reflex is to use gdb on this executable.
+With ``disas main``, we can see that the progam use an atoi on the first parameter and compare the result. If the result is not what is expected, the program get us to the end. But by using the value ``423``, we can go throught the rest of the program.
+
+We get to another bash and with the command ``whoami``, we can see that we are no longer user ``level0``, but user ``level1``. We go to the home of this user and use ``cat .pass``. We go the password to level1.
