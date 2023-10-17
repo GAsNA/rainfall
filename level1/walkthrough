@@ -1,0 +1,12 @@
+We have here an executable ``level1`` which is waiting a string when launch.
+
+With gdb, we can see in the main (``disas main``) that it uses ``gets`` to wait our string. ``gets`` is known to be used to break computer security. Indeed we can easily have a overflow. Here it gets a buffer of 75 characters, so if we pass more characters we have an 'Segmentation fault (core dumped)'. This segfault is representative of the writing if the register ``eip``. This register is a link with the next function.
+
+Always with gdb, we can use ``info func`` which returns all functions in the program. We can see a function not called anywhere: ``run``. By doing ``disas run``, it reveals that it makes a system call with value '0x8048584'. By doing ``x/s 0x8048584``, we known that it means '/bin/sh'. So this function makes a system call on '/bin/sh'.
+We have another value that we can traducte: '0x8048570', wich means 'Good... Wait what?'. This value is written at the enter of the function.
+
+Whith all that, we can be able to call the function ``run``, by using the fault of ``gets``. Nothing is easier! (no). We can pass as many as characters needed to get to the overflow and then write the hexa corresponding to the address of the beginning of ``run``.
+The adress is '0x08048444'. We use a little bit of python to get what we need: ``(python -c "print('B' * 76 + '\x44\x84\x04\x08')"; cat -) | ./level1``. It writes 76 characters and then the address, written in backward because of the stack that we are "pushing".
+
+Bingo! We have our message 'Good... Wait what?', and thanks to ``cat -``, we can continue to write in the bash executed.
+With a ``whoami``, we can see that we are indeed 'level2'. We can go to their home and cat the ``.pass`` file.
