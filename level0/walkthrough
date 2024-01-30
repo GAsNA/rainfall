@@ -1,6 +1,30 @@
-With the command ``ls -l``, we can find an executable ``level0``. We can try to execute it with ``./level0`` or ``level0 a``, but we got a segmentation fault or a message ``No !`` printed.
+# We can found a binary named level0
+# When we execute them it segfault until you send arguments (argv[1])
+# When you give random arguments it says 'No !'
+# Let's check what the program need to continue
 
-First reflex is to use gdb on this executable.
-With ``disas main``, we can see that the progam use an atoi on the first parameter and compare the result. If the result is not what is expected, the program get us to the end. But by using the value ``423``, we can go throught the rest of the program.
+gdb ~/level0
+disas main
 
-We get to another bash and with the command ``whoami``, we can see that we are no longer user ``level0``, but user ``level1``. We go to the home of this user and use ``cat .pass``. We go the password to level1.
+# We can see that the main is using atoi and compare right after the execution
+# Let's check the value and send it as argument
+
+   0x08048ed4 <+20>:	call   0x8049710 <atoi>
+   0x08048ed9 <+25>:	cmp    $0x1a7,%eax
+
+# 0x1a7 refers to 423 in decimal
+
+q
+~/level0 423
+$ 
+
+# It opens /bin/dash which is bash
+# Thanks to the command whoami we can see that we are connected as level1
+
+$ whoami
+level1
+
+# Let's cat the .pass file at the home repository of level1
+
+cat /home/user/level1/.pass
+1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a 
